@@ -85,7 +85,6 @@ function bookRequest(category, startPositon) {
   
               <div class="author">${data.items[i].volumeInfo.authors}</div>
               <div class="title">${data.items[i].volumeInfo.title}</div>
-
               ${
                 data.items[i].volumeInfo.ratingsCount
                   ? `<div class="ratingsCount">${star(
@@ -97,7 +96,6 @@ function bookRequest(category, startPositon) {
                 data.items[i].volumeInfo.description
               )} </div>
          
-
               ${
                 data.items[i].saleInfo.retailPrice
                   ? `<div class="price">${data.items[i].saleInfo.retailPrice.amount}${data.items[i].saleInfo.retailPrice.currencyCode}</div>`
@@ -105,8 +103,7 @@ function bookRequest(category, startPositon) {
                  ${data.items[i].saleInfo.saleability.replace(/_/g, " ")}
                </div>`
               }
-
-              <button class="buy" onclick="purchase(this);" >buy now</button>
+              <button class="buy"  >buy now</button>
   
           </div>
   
@@ -190,6 +187,13 @@ function purchase(button) {
     checkZero();
   }
 }
+
+document.addEventListener("click", (e) => {
+  const {target} = e;
+  if (target.tagName === 'BUTTON' && target.classList.contains("buy")) {
+    purchase(target);
+  }
+})
 
 function checkZero() {
   if (localStorage.getItem("cartCount") > 0) {
