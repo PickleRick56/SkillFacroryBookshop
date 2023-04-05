@@ -103,7 +103,9 @@ function bookRequest(category, startPositon) {
                  ${data.items[i].saleInfo.saleability.replace(/_/g, " ")}
                </div>`
               }
-              <button class="buy" data-id=${data.items[i].id} >buy now</button>
+
+
+              <button class="buy" data-id=${data.items[i].id} > ${buyOrIn(data.items[i].id)}</button>
   
           </div>
   
@@ -182,7 +184,9 @@ function purchase(button) {
       console.log(arr);
     }else{ let arr = JSON.parse(localStorage.getItem("cartId"));
     if (arr.length == 0) {
-      arr = Array(button.dataset.id);
+      let y = button.dataset.id;
+      arr = Array(y);
+      localStorage.setItem("cartId", JSON.stringify(arr));
     } else {
       let y = button.dataset.id;
       arr.push(y);
@@ -246,4 +250,9 @@ function checkZero() {
   } else {
     document.querySelector(":root").style.setProperty("--hidden", "hidden");
   }
+}
+
+
+function buyOrIn (buttonId){
+return "BUY NOW";
 }
