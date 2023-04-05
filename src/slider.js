@@ -68,8 +68,8 @@ dots.addEventListener("click", directSelection, false);
 // BOOKS
 function bookRequest(category, startPositon) {
   fetch(
-    `https://www.googleapis.com/books/v1/volumes?q="subject:${category}"&key=AIzaSyARaQbqJaGTu2k41QqIQHeM5DIhY69brqs&printType=books&startIndex=${startPositon}&maxResults=6&langRestrict=en`
-  )
+      `https://www.googleapis.com/books/v1/volumes?q="subject:${category}"&key=AIzaSyARaQbqJaGTu2k41QqIQHeM5DIhY69brqs&printType=books&startIndex=${startPositon}&maxResults=6&langRestrict=en`
+    )
     .then((response) => {
       return response.json();
     })
@@ -133,6 +133,7 @@ loadMoreButton.addEventListener("click", () => {
 
   bookRequest(activeCategory, cardNumber.length);
 });
+
 function cleanBeforeRequest() {
   cards.innerHTML = "";
 }
@@ -176,26 +177,27 @@ function reviewer(description) {
 
 // CART
 function purchase(button) {
-  if (button.innerText === "BUY NOW" ) {
-    
-    if(localStorage.getItem("cartId") == null){
+  if (button.innerText === "BUY NOW") {
+
+    if (localStorage.getItem("cartId") == null) {
       let arr = Array(button.dataset.id);
       localStorage.setItem("cartId", JSON.stringify(arr));
       console.log(arr);
-    }else{ let arr = JSON.parse(localStorage.getItem("cartId"));
-    if (arr.length == 0) {
-      let y = button.dataset.id;
-      arr = Array(y);
-      localStorage.setItem("cartId", JSON.stringify(arr));
     } else {
-      let y = button.dataset.id;
-      arr.push(y);
+      let arr = JSON.parse(localStorage.getItem("cartId"));
+      if (arr.length == 0) {
+        let y = button.dataset.id;
+        arr = Array(y);
+        localStorage.setItem("cartId", JSON.stringify(arr));
+      } else {
+        let y = button.dataset.id;
+        arr.push(y);
 
-      localStorage.setItem("cartId", JSON.stringify(arr));
+        localStorage.setItem("cartId", JSON.stringify(arr));
+      }
+
     }
 
-    }
-    
     button.innerText = "in the cart";
     cart.dataset.styleType = Number(cart.dataset.styleType) + 1;
     localStorage.setItem("cartCount", `${cart.dataset.styleType}`);
@@ -236,9 +238,29 @@ function findIdInCart(button) {
   }
 }
 
+function buyOrIn(buttonId) {
+  if (localStorage.getItem("cartId") == null) {
+    return "BUY NOW";
+  } else {
+    let cartArray = JSON.parse(localStorage.getItem("cartId"));
+    let y = cartArray.filter(item => {
+      return item == buttonId;
+    });
+    console.log(y);
+    if (y.length > 0) {
+      return "IN THE CART";
+    } else {
+      return "BUY NOW";
+    }
+
+  }
+}
+
 
 document.addEventListener("click", (e) => {
-  const {target} = e;
+  const {
+    target
+  } = e;
   if (target.tagName === 'BUTTON' && target.classList.contains("buy")) {
     purchase(target);
   }
@@ -250,9 +272,4 @@ function checkZero() {
   } else {
     document.querySelector(":root").style.setProperty("--hidden", "hidden");
   }
-}
-
-
-function buyOrIn (buttonId){
-return "BUY NOW";
 }
