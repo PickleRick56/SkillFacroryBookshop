@@ -103,7 +103,7 @@ function bookRequest(category, startPositon) {
                  ${data.items[i].saleInfo.saleability.replace(/_/g, " ")}
                </div>`
               }
-              <button class="buy"  >buy now</button>
+              <button class="buy" data-id=${data.items[i].id} >buy now</button>
   
           </div>
   
@@ -174,12 +174,37 @@ function reviewer(description) {
 
 // CART
 function purchase(button) {
-  if (button.innerText === "BUY NOW") {
+  if (button.innerText === "BUY NOW" ) {
+    
+    if(localStorage.getItem("cartId") == null){
+      let arr = Array(button.dataset.id);
+      localStorage.setItem("cartId", JSON.stringify(arr));
+      console.log(arr);
+    }else{ let arr = JSON.parse(localStorage.getItem("cartId"));
+    if (arr.length == 0) {
+      arr = Array(button.dataset.id);
+    } else {
+      let y = button.dataset.id;
+      arr.push(y);
+
+      localStorage.setItem("cartId", JSON.stringify(arr));
+    }
+
+    }
+    
     button.innerText = "in the cart";
     cart.dataset.styleType = Number(cart.dataset.styleType) + 1;
     localStorage.setItem("cartCount", `${cart.dataset.styleType}`);
     document.querySelector(":root").style.setProperty("--hidden", "visible");
   } else if (button.innerText === "IN THE CART") {
+
+    let arr = JSON.parse(localStorage.getItem("cartId"));
+    let y = arr.filter(item => {
+      return item != button.dataset.id;
+    });
+    console.log(y);
+    localStorage.setItem("cartId", JSON.stringify(y));
+
     button.innerText = "BUY NOW";
     cart.dataset.styleType = Number(cart.dataset.styleType) - 1;
     localStorage.setItem("cartCount", `${cart.dataset.styleType}`);
@@ -187,6 +212,26 @@ function purchase(button) {
     checkZero();
   }
 }
+
+function findIdInCart(button) {
+  if (localStorage.getItem("cartId") == null) {
+    return true;
+  } else {
+    let cartArray = JSON.parse(localStorage.getItem("cartId"));
+    console.log(cartArray);
+    let y = cartArray.filter(item => {
+      return item == button.dataset.id;
+    });
+    console.log(y);
+    if (y.length > 0) {
+      return false;
+    } else {
+      return true;
+    }
+
+  }
+}
+
 
 document.addEventListener("click", (e) => {
   const {target} = e;
